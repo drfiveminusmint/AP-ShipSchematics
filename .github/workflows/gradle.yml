@@ -42,20 +42,20 @@ jobs:
       
     - name: Stage jar for Actions
       if: ${{ github.event_name != 'release' }}
-      run: mkdir staging && cp build/libs/Movecraft-Combat.jar staging && mv staging/Movecraft-Combat.jar staging/Movecraft-Combat_$GITHUB_SHA.jar
+      run: mkdir staging && cp build/libs/AP-ShipSchematics.jar staging && mv staging/AP-ShipSchematics.jar staging/AP-ShipSchematics_$GITHUB_SHA.jar
     - name: Upload jar to Actions
       if: ${{ github.event_name != 'release' }}
       uses: actions/upload-artifact@v4
       with:
-        name: Movecraft-Combat_Dev-Build
-        path: staging/Movecraft-Combat_*.jar
+        name: AP-ShipSchematics_Dev-Build
+        path: staging/AP-ShipSchematics_*.jar
 
     - name: Stage jar for Release
       if: ${{ github.event_name == 'release' }}
-      run: mkdir staging && cp build/libs/Movecraft-Combat.jar staging && mv staging/Movecraft-Combat.jar staging/Movecraft-Combat_${{ github.event.release.tag_name }}.jar
+      run: mkdir staging && cp build/libs/AP-ShipSchematics.jar staging && mv staging/AP-ShipSchematics.jar staging/AP-ShipSchematics_${{ github.event.release.tag_name }}.jar
     - name: Upload jar to Release
       if: ${{ github.event_name == 'release' }}
       uses: softprops/action-gh-release@v2
       with:
-       files: staging/Movecraft-Combat_${{ github.event.release.tag_name }}.jar
+       files: staging/AP-ShipSchematics_${{ github.event.release.tag_name }}.jar
 
