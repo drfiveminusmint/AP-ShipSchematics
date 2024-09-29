@@ -1,0 +1,15 @@
+name: AP-ShipSchematics
+version: '${projectVersion}'
+main: com.github.drfiveminusmint.apshipschematics.ShipSchematics
+api-version: '1.21'
+depend:
+  - Movecraft
+  - Movecraft-Repair
+  - Movecraft-WorldGuard
+commands:
+  saveship:
+    description: Saves a ship you're piloting in the world as a schematic.
+    usage: /saveship <schemname>
+  impound:
+    description: Create, search, and manage impounds.
+    usage: /impound (search/info/create/remove)
