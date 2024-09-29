@@ -37,8 +37,9 @@ jobs:
         build-scan-terms-of-use-url: "https://gradle.com/terms-of-service"
         build-scan-terms-of-use-agree: "yes"
 
-    - name: Build with Gradle Wrapper
-      run: ./gradlew clean build --parallel
+    - name: Build with Gradle
+      run: gradle clean build --parallel
+      
     - name: Stage jar for Actions
       if: ${{ github.event_name != 'release' }}
       run: mkdir staging && cp build/libs/Movecraft-Combat.jar staging && mv staging/Movecraft-Combat.jar staging/Movecraft-Combat_$GITHUB_SHA.jar
