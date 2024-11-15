@@ -60,7 +60,7 @@ public class ImpoundInfoTask implements ImpoundTask {
         else
             notifyPlayer.sendMessage(buildComponent("Location","(Unknown)"));
         notifyPlayer.sendMessage(buildComponent("Unimpound Cost", String.valueOf(impound.getUnimpoundCost())));
-        notifyPlayer.sendMessage(Component.text("[Load Schematic]").clickEvent(ClickEvent.runCommand("//schem load " + Settings.schematicFolderPath + " " + impound.getSchematic()))
+        notifyPlayer.sendMessage(Component.text("[Load Schematic]").clickEvent(ClickEvent.runCommand("/impound load " + impound.getPlayerUUID() + " " + impound.getSchematic()))
                         .append(Component.text(" [Charge Unimpound Cost] ").clickEvent(ClickEvent.runCommand("/eco take " + impound.getPlayerUUID() + " " + impound.getUnimpoundCost())))
                         .append(Component.text("[Remove]").clickEvent(ClickEvent.runCommand("/impound remove " + impound.getPlayerUUID() + " " + impound.getSchematic()))).color(NamedTextColor.AQUA));
     }

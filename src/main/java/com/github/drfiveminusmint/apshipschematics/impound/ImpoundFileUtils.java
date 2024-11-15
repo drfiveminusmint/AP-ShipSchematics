@@ -2,8 +2,6 @@ package com.github.drfiveminusmint.apshipschematics.impound;
 
 import com.github.drfiveminusmint.apshipschematics.ShipSchematics;
 import com.github.drfiveminusmint.apshipschematics.TextUtils;
-import com.github.drfiveminusmint.apshipschematics.impound.Impound;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 

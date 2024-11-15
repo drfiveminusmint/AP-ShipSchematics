@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Date;
 import java.util.UUID;
 
 public class ImpoundSearchTask implements ImpoundTask {
@@ -18,25 +19,31 @@ public class ImpoundSearchTask implements ImpoundTask {
     private final Player notifyPlayer;
     private String nameContains;
 
+    private Date dateBefore = null;
+    private Date dateAfter = null;
+
     public ImpoundSearchTask(@NotNull Player notifyPlayer, @Nullable UUID targetUUID, String... flags)
     {
         this.notifyPlayer = notifyPlayer;
         this.searchUUID = targetUUID;
         for (String s : flags) {
-            String lc = s.toLowerCase();
-            if (lc.contains("namecontains:")) {
-                nameContains = lc.substring(lc.lastIndexOf("namecontains:")+13);
+            String [] arg = s.split(":");
+            if (arg.length != 2) continue;
+            if (arg[0].equalsIgnoreCase("nameContains") || arg[0].equalsIgnoreCase("nc")) {
+                nameContains = arg[1];
                 continue;
             }
-            if (lc.contains("nc:")) {
-                nameContains = lc.substring(lc.lastIndexOf("nc:")+3);
+            if (arg[0].equalsIgnoreCase("before") || arg[0].equalsIgnoreCase("b")) {
+                dateBefore = new Date(arg[1]);
                 continue;
+            }
+            if (arg[0].equalsIgnoreCase("after") || arg[0].equalsIgnoreCase("a")) {
+                dateAfter = new Date(arg[1]);
             }
         }
     }
     public void run() {
-        File searchFile = new File(ShipSchematics.getInstance().getDataFolder().getAbsolutePath()
-                + "/impounds/" + TextUtils.nullableUUIDToString(searchUUID) + ".yml");
+        File searchFile = new File(ShipSchematics.getImpoundFolder(), TextUtils.nullableUUIDToString(searchUUID) + ".yml");
         if (!searchFile.exists()) {
             notifyPlayer.sendMessage("Cannot find any impounds for UUID " + searchUUID);
             return;

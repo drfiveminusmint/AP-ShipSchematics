@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 public class ImpoundRemoveTask implements ImpoundTask {
@@ -22,10 +20,8 @@ public class ImpoundRemoveTask implements ImpoundTask {
     }
 
     public void run() {
-        File impoundsFile = new File(ShipSchematics.getInstance().getDataFolder().getAbsolutePath()
-                + "/impounds/" + TextUtils.nullableUUIDToString(targetUUID) + ".yml");
-        File tempFile = new File(ShipSchematics.getInstance().getDataFolder().getAbsolutePath()
-                + "/impounds/" + TextUtils.nullableUUIDToString(targetUUID) + "-new.yml");
+        File impoundsFile = new File(ShipSchematics.getImpoundFolder(), TextUtils.nullableUUIDToString(targetUUID) + ".yml");
+        File tempFile = new File(ShipSchematics.getImpoundFolder(), TextUtils.nullableUUIDToString(targetUUID) + "-new.yml");
         try {
            if (tempFile.exists())
                tempFile.delete();
@@ -51,7 +47,14 @@ public class ImpoundRemoveTask implements ImpoundTask {
         }
         if (impoundsFile.delete() && tempFile.renameTo(impoundsFile))
             notifyPlayer.sendMessage("Successfully removed impound " + impoundName);
-        else
+        else {
             notifyPlayer.sendMessage("Error removing impound from list: Couldn't replace impound file.");
+            return;
+        }
+
+        // Next, delete the schematic
+        File schematicFile = new File(ShipSchematics.getImpoundFolder(), targetUUID + "/" + impoundName + ".schem");
+        if (schematicFile.exists())
+            schematicFile.delete();
     }
 }

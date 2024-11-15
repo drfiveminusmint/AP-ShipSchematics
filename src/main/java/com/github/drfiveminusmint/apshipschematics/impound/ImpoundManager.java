@@ -35,7 +35,7 @@ public class ImpoundManager extends BukkitRunnable {
 
     public ComponentPaginator getSearchResults(Player p) {
         //refresh the countdown
-        addTask(() -> {});
+        cachePurgeCountdown = 1200;
         return cachedSearchResults.get(p);
     }
 

@@ -1,19 +1,15 @@
 package com.github.drfiveminusmint.apshipschematics.command;
 
+import com.github.drfiveminusmint.apshipschematics.ShipSaver;
 import com.github.drfiveminusmint.apshipschematics.ShipSchematics;
 import com.github.drfiveminusmint.apshipschematics.impound.*;
-import net.countercraft.movecraft.Movecraft;
 import net.countercraft.movecraft.MovecraftLocation;
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
 import net.countercraft.movecraft.craft.type.CraftType;
-import net.countercraft.movecraft.processing.WorldManager;
 import net.countercraft.movecraft.util.ComponentPaginator;
-import net.countercraft.movecraft.util.MathUtils;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
@@ -23,6 +19,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,9 +28,7 @@ public class ImpoundCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (!command.getName().equalsIgnoreCase("impound"))
-            return false;
-        if (args.length == 0)
+        if (!command.getName().equalsIgnoreCase("impound") || args.length == 0)
             return false;
         if (!(sender instanceof Player)) {
             sender.sendMessage("You must be a player to use this command.");
@@ -48,6 +44,8 @@ public class ImpoundCommand implements TabExecutor {
             return createCommand(((Player) sender), args);
         if (args[0].equalsIgnoreCase("remove"))
             return removeCommand(((Player) sender), args);
+        if (args[0].equalsIgnoreCase("load"))
+            return loadCommand(((Player) sender), args);
         return false;
     }
 
@@ -148,6 +146,16 @@ public class ImpoundCommand implements TabExecutor {
         }
         String schemName = args[1];
         //TODO save schematic
+        if (new File(ShipSchematics.getImpoundFolder(), ownerUUID + "/" + schemName + ".schem").exists())
+        {
+            sender.sendMessage("This schematic already exists.");
+            return true;
+        }
+        if (!ShipSaver.trySaveShip(sender,  schemName, "AP-ShipSchematics/impounds/" + ownerUUID))
+        {
+            sender.sendMessage("Error saving your schematic.");
+            return true;
+        }
         Impound resultImpound = new Impound(
                 schemName,
                 ownerUUID,
@@ -173,6 +181,24 @@ public class ImpoundCommand implements TabExecutor {
             return true;
         }
         ShipSchematics.getImpoundManager().addTask(new ImpoundRemoveTask(sender, searchUUID, args[2]));
+        return true;
+    }
+
+    private boolean loadCommand(Player sender, String[] args) {
+        //loading logic
+        if (args.length < 3)
+        {
+            sender.sendMessage("Insufficient arguments. Use /impound load (<player>/unknown) <name>");
+        }
+        File searchFile;
+        try {
+            UUID searchUUID = getNullableUUID(args[1]);
+            searchFile = new File(ShipSchematics.getImpoundFolder(), searchUUID.toString());
+        } catch (IllegalArgumentException e) {
+            sender.sendMessage("Could not resolve player or UUID " + args[1]);
+            return true;
+        }
+        ShipSchematics.getImpoundManager().addTask(new ImpoundLoadTask(sender, searchFile, args[2]));
         return true;
     }
 

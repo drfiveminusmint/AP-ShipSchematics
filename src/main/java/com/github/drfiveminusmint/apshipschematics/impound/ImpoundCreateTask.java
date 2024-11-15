@@ -20,8 +20,7 @@ public class ImpoundCreateTask implements ImpoundTask {
     }
     @Override
     public void run() {
-        File impoundsFile = new File(ShipSchematics.getInstance().getDataFolder().getAbsolutePath()
-                + "/impounds/" + TextUtils.nullableUUIDToString(impound.getPlayerUUID()) + ".yml");
+        File impoundsFile = new File(ShipSchematics.getImpoundFolder(), TextUtils.nullableUUIDToString(impound.getPlayerUUID()) + ".yml");
         if (!impoundsFile.exists())
             try {
                 impoundsFile.createNewFile();
@@ -30,8 +29,8 @@ public class ImpoundCreateTask implements ImpoundTask {
                 notifyPlayer.sendMessage("Error adding impound to list; your schematic has still been saved.");
                 return;
             }
-        File tempFile = new File(ShipSchematics.getInstance().getDataFolder().getAbsolutePath()
-                + "/impounds/" + TextUtils.nullableUUIDToString(impound.getPlayerUUID()) + "-new.yml");
+
+        File tempFile = new File(ShipSchematics.getImpoundFolder(), TextUtils.nullableUUIDToString(impound.getPlayerUUID()) + "-new.yml");
         try {
             Files.copy(impoundsFile.toPath(), tempFile.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.COPY_ATTRIBUTES);
         } catch (IOException e) {
@@ -39,6 +38,7 @@ public class ImpoundCreateTask implements ImpoundTask {
             notifyPlayer.sendMessage("Error adding impound to list; your schematic has still been saved.");
             return;
         }
+
         if (ImpoundFileUtils.writeImpoundToFile(tempFile, impound) && impoundsFile.delete() && tempFile.renameTo(impoundsFile)) {
             notifyPlayer.sendMessage("Successfully added impound to list.");
         } else

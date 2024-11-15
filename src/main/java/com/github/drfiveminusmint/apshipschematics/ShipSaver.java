@@ -2,6 +2,7 @@ package com.github.drfiveminusmint.apshipschematics;
 
 import net.countercraft.movecraft.craft.Craft;
 import net.countercraft.movecraft.craft.CraftManager;
+import net.countercraft.movecraft.repair.util.WEUtils;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -21,9 +22,9 @@ public class ShipSaver {
             return false;
         }
         String pluginsFolderPath = ShipSchematics.getPlugin(ShipSchematics.class).getDataFolder().getParentFile().getAbsolutePath();
-        File target = new File(pluginsFolderPath + dir);
-        return true; //TODO: make this actually work
-        //return WEUtils.saveCraftSchematic(target, name, craft.getWorld(), craft.getHitBox(), player.getLocation());
+        File target = new File(pluginsFolderPath + "/" + dir);
+        if (!target.exists()) target.mkdirs();
+        return WEUtils.saveCraftSchematic(target, name, craft.getWorld(), craft.getHitBox(), player.getLocation());
 
     }
 }

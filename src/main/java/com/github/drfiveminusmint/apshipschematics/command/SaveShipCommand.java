@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class SaveShipCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] strings) {
+    public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if (!command.getName().equalsIgnoreCase("saveship"))
             return false;
         if (!(commandSender instanceof Player)) {
@@ -18,15 +18,15 @@ public class SaveShipCommand implements CommandExecutor {
             return true;
         }
 
-        if (strings.length < 1) {
+        if (args.length < 1) {
             commandSender.sendMessage(ChatUtils.errorPrefix() + "Please provide a name for the schematic.");
             return true;
         }
 
-        if (!ShipSaver.trySaveShip((Player) commandSender, strings[0])) {
+        if (!ShipSaver.trySaveShip((Player) commandSender, args[0])) {
             commandSender.sendMessage(ChatUtils.errorPrefix() + "Something went wrong saving your schematic.");
             return true;
         }
-        return false;
+        return true;
     }
 }

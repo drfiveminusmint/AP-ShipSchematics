@@ -10,6 +10,8 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
+    maven("https://jitpack.io")
+    maven("https://maven.enginehub.org/repo/")
     maven { githubPackage("apdevteam/movecraft")(this) }
     maven { githubPackage("apdevteam/movecraft-repair")(this) }
     maven { githubPackage("apdevteam/movecraft-worldguard")(this) }
@@ -17,9 +19,11 @@ repositories {
 
 dependencies {
     api("org.jetbrains:annotations-java5:24.1.0")
+    api("com.sk89q.worldedit:worldedit-core:7.3.3")
+    api("com.sk89q.worldedit:worldedit-bukkit:7.3.3")
     compileOnly("io.papermc.paper:paper-api:1.18.2-R0.1-SNAPSHOT")
     compileOnly("net.countercraft:movecraft:+")
-    compileOnly("net.countercraft.movecraft.repair:movecraft-repair:1.0.0_beta-6")
+    compileOnly("net.countercraft.movecraft.repair:movecraft-repair:1.0.0_beta-7_dev-2")
     compileOnly("net.countercraft.movecraft.worldguard:movecraft-worldguard:+")
     compileOnly("it.unimi.dsi:fastutil:8.5.11")
 }
@@ -27,7 +31,7 @@ dependencies {
 group = "com.github.drfiveminusmint.APShipSchematics"
 version = "1.0.0_beta-1"
 description = "AP-ShipSchematics"
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 tasks.jar {
     archiveBaseName.set("AP-ShipSchematics")
